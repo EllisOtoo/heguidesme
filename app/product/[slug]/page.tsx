@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/product/AddToCartButton";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -89,15 +91,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
     </div>
   );
-}
-
-// Generate static params for known products
-export async function generateStaticParams() {
-  const { prisma } = await import("@/lib/prisma");
-  const products = await prisma.product.findMany({
-    select: { slug: true },
-  });
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
 }

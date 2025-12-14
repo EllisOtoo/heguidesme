@@ -2,27 +2,26 @@
 
 import { useCartStore } from "@/store/cart-store";
 import { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { verifyOrderPayment } from "@/actions/verify-order";
-import { ShoppingBag, CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 
 // Separate component for reading search params to avoid de-opt
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const reference = searchParams.get("reference");
   const { clearCart } = useCartStore();
   
-  const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
-  const [message, setMessage] = useState("Verifying your payment...");
+  const [status, setStatus] = useState<"verifying" | "success" | "error">(() =>
+    reference ? "verifying" : "error"
+  );
+  const [message, setMessage] = useState(() =>
+    reference ? "Verifying your payment..." : "No payment reference found."
+  );
 
   useEffect(() => {
-    if (!reference) {
-      setStatus("error");
-      setMessage("No payment reference found.");
-      return;
-    }
+    if (!reference) return;
 
     const verify = async () => {
       try {

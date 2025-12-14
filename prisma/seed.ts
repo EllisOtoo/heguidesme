@@ -1,5 +1,6 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 async function main() {
   // 1. Single Quiet Time Journal
@@ -16,7 +17,23 @@ async function main() {
         inventory: 100
     },
   })
-  console.log({ journal })
+  console.log({ journal });
+
+  // 1b. Donation (hidden from shop listings)
+  const donation = await prisma.product.upsert({
+    where: { slug: 'donation' },
+    update: {},
+    create: {
+      slug: 'donation',
+      name: 'Donation',
+      description: 'Support our mission with a donation.',
+      price: 0,
+      images: [],
+      category: 'DONATION',
+      inventory: 0,
+    },
+  })
+  console.log({ donation });
 
   // 2. Gift Bundle
   const bundle = await prisma.product.upsert({
@@ -32,15 +49,15 @@ async function main() {
         inventory: 25
     },
   })
-  console.log({ bundle })
+  console.log({ bundle });
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

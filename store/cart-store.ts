@@ -14,6 +14,7 @@ export interface CartItem {
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
+  hasHydrated: boolean;
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
@@ -23,6 +24,7 @@ interface CartStore {
   toggleCart: () => void;
   getCartTotal: () => number;
   getCartCount: () => number;
+  setHasHydrated: (hasHydrated: boolean) => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -30,6 +32,7 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       isOpen: false,
+      hasHydrated: false,
 
       addItem: (item) => {
         set((state) => {
@@ -77,9 +80,16 @@ export const useCartStore = create<CartStore>()(
       getCartCount: () => {
         return get().items.reduce((total, item) => total + item.quantity, 0);
       },
+
+      setHasHydrated: (hasHydrated) => set({ hasHydrated }),
     }),
     {
       name: 'quiet-time-cart',
+      partialize: (state) => ({ items: state.items }),
+      skipHydration: true,
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

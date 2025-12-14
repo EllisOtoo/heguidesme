@@ -1,11 +1,10 @@
 "use client";
 
+import { createOrder } from "@/actions/create-order";
 import { useCartStore } from "@/store/cart-store";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ShoppingBag, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -22,20 +21,8 @@ const checkoutSchema = z.object({
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
-import { createOrder } from "@/actions/create-order";
-
-// ... (existing imports)
-
 export default function CheckoutPage() {
-  const { items, getCartTotal, clearCart } = useCartStore();
-  const [isClient, setIsClient] = useState(false);
-  // Remove isSuccess state as we redirect away
-  // const [isSuccess, setIsSuccess] = useState(false);
-
-  // Hydration fix
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { items, getCartTotal, hasHydrated } = useCartStore();
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -61,7 +48,7 @@ export default function CheckoutPage() {
         if (result.success && result.paymentUrl) {
             // Save cart items to local storage or session storage if needed for
             // post-payment verification (optional, or we rely on cart store persisting until clearCart is called on success page)
-            window.location.href = result.paymentUrl;
+            window.location.assign(result.paymentUrl);
         } else {
             console.error("Payment Init Failed", result.error);
             alert("Failed to initialize payment. Please try again.");
@@ -72,13 +59,20 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!isClient) return null;
+  if (!hasHydrated) {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="w-10 h-10 border-4 border-primary-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-text-light">Loading your cart…</p>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
         <h1 className="font-serif text-3xl font-bold text-text-dark mb-4">Your Cart is Empty</h1>
-        <p className="text-text-light mb-8">Looks like you haven't added anything to your cart yet.</p>
+        <p className="text-text-light mb-8">Looks like you have not added anything to your cart yet.</p>
         <Link href="/" className="text-primary-blue font-medium hover:underline">
           Return to Shop
         </Link>

@@ -3,15 +3,14 @@
 import { useCartStore } from "@/store/cart-store";
 import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CartSheet from "../cart/CartSheet";
 
 const Navbar = () => {
-  const { toggleCart, getCartCount, isOpen } = useCartStore();
-  const [mounted, setMounted] = useState(false);
+  const { toggleCart, getCartCount, hasHydrated } = useCartStore();
 
   useEffect(() => {
-    setMounted(true);
+    useCartStore.persist.rehydrate();
   }, []);
 
   return (
@@ -28,8 +27,14 @@ const Navbar = () => {
             <Link href="/" className="text-sm font-medium text-text-light hover:text-primary-blue transition-colors">
               Shop
             </Link>
+            <Link href="/donate" className="text-sm font-medium text-text-light hover:text-primary-blue transition-colors">
+              Donate
+            </Link>
             <Link href="/testimonials" className="text-sm font-medium text-text-light hover:text-primary-blue transition-colors">
               Testimonials
+            </Link>
+            <Link href="/feedback" className="text-sm font-medium text-text-light hover:text-primary-blue transition-colors">
+              Feedback
             </Link>
             <Link href="/contact" className="text-sm font-medium text-text-light hover:text-primary-blue transition-colors">
               Contact Us
@@ -47,7 +52,7 @@ const Navbar = () => {
                 aria-label="Cart"
             >
               <ShoppingBag className="w-6 h-6" />
-              {mounted && getCartCount() > 0 && (
+              {hasHydrated && getCartCount() > 0 && (
                 <span className="absolute -top-1 -right-1 bg-accent-green text-text-dark text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                    {getCartCount()}
                 </span>

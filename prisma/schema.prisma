@@ -36,6 +36,7 @@ model Order {
   updatedAt     DateTime    @updatedAt
   totalAmount   Int
   status        String      @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED
+  reference     String?     @unique
   
   customer      Customer    @relation(fields: [customerId], references: [id])
   customerId    String

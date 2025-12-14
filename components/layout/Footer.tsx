@@ -23,8 +23,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-text-light hover:text-primary-blue transition-colors">
-                  Gift Bundles
+                <Link href="/donate" className="text-sm text-text-light hover:text-primary-blue transition-colors">
+                  Donate
                 </Link>
               </li>
             </ul>
@@ -42,6 +42,11 @@ const Footer = () => {
               <li>
                 <Link href="/feedback" className="text-sm text-text-light hover:text-primary-blue transition-colors">
                   Feedback
+                </Link>
+              </li>
+              <li>
+                <Link href="/donate" className="text-sm text-text-light hover:text-primary-blue transition-colors">
+                  Donate
                 </Link>
               </li>
               <li>

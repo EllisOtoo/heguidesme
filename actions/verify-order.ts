@@ -8,18 +8,16 @@ export async function verifyOrderPayment(reference: string) {
     const paymentData = await verifyPayment(reference);
 
     if (paymentData.status && paymentData.data.status === "success") {
-        
-        // Update the order status to PAID
-        try {
-            await prisma.order.update({
-                where: { reference: reference },
-                data: { status: "PAID" }
-            });
-        } catch (e) {
-            console.error("Failed to update order status", e);
-        }
+      const updateResult = await prisma.order.updateMany({
+        where: { reference },
+        data: { status: "PAID" },
+      });
 
-        return { success: true };
+      if (updateResult.count === 0) {
+        console.error("No order found for reference", reference);
+      }
+
+      return { success: true };
     }
 
     return { success: false, error: "Payment verification failed" };

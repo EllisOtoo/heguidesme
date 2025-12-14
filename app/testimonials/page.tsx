@@ -10,7 +10,7 @@ export default function TestimonialsPage() {
         {/* Placeholder for Testimonials List */}
         <div className="p-8 bg-background-mist rounded-2xl border border-gray-100 mb-8">
           <p className="text-xl font-serif italic text-text-dark mb-4">
-            "This journal has completely changed my morning routine. I finally feel focused."
+            “This journal has completely changed my morning routine. I finally feel focused.”
           </p>
           <p className="text-sm font-medium text-text-light">— Sarah J.</p>
         </div>

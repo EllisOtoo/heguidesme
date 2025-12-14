@@ -4,14 +4,6 @@ import { useCartStore } from "@/store/cart-store";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-
-// Create a utility for cn if not exists, inline for now to avoid errors
-// In a real project, this would be in lib/utils.ts
-function classNames(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export default function CartSheet() {
   const { 
@@ -22,15 +14,6 @@ export default function CartSheet() {
     updateQuantity, 
     getCartTotal 
   } = useCartStore();
-  
-  const [mounted, setMounted] = useState(false);
-
-  // Prevent hydration errors
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   const total = getCartTotal();
   const formattedTotal = new Intl.NumberFormat("en-GH", {
