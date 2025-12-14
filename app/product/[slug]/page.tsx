@@ -2,6 +2,7 @@ import { getProductBySlug } from "@/actions/get-products";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import AddToCartButton from "@/components/product/AddToCartButton";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -74,12 +75,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Add to Cart Button */}
-            <button
-              className="w-full bg-primary-blue text-white font-medium py-4 rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={product.inventory === 0}
-            >
-              Add to Cart
-            </button>
+            <AddToCartButton 
+                product={product} 
+                disabled={product.inventory === 0} 
+            />
 
             <p className="text-xs text-text-light mt-4 text-center">
               Free delivery within Accra. Other regions may incur shipping
