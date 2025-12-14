@@ -75,12 +75,15 @@ function HeroGrain() {
 
 export default function HeroBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
       <div
         className="absolute inset-0 [filter:saturate(1.18)_contrast(1.06)]"
         style={baseBackgroundStyle}
       />
-      <HeroOrbits />
+      {/* <HeroOrbits /> */}
       <HeroGrain />
       <div className="absolute inset-0 bg-gradient-to-b from-background-paper/30 via-background-paper/15 to-background-mist/25" />
     </div>

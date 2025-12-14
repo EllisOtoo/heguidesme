@@ -120,7 +120,7 @@ export default function Hero() {
       </div>
 
       {/* Central Content */}
-      <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center">
+      <div className="relative z-50 max-w-4xl mx-auto flex flex-col items-center">
         <h1 className="hero-text font-serif text-5xl md:text-7xl font-bold text-text-dark mb-6 tracking-tight">
           Find Your Quiet Place
         </h1>
