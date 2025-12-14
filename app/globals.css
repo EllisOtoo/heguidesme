@@ -12,12 +12,22 @@
   /* Brand Colors */
   --primary-blue: #007BC2; /* Grace Blue */
   --accent-green: #BBE141; /* Life Leaf */
+
+  /* RGB helpers (for gradients with alpha) */
+  --primary-blue-rgb: 0 123 194;
+  --accent-green-rgb: 187 225 65;
   
   /* Neutrals */
   --text-dark: #1F2937;    /* Ink */
   --text-light: #6B7280;   /* Stone */
   --background-paper: #FFFFFF; /* Paper */
   --background-mist: #F3F4F6;  /* Mist */
+
+  /* RGB helpers (for gradients with alpha) */
+  --text-dark-rgb: 31 41 55;
+  --text-light-rgb: 107 114 128;
+  --background-paper-rgb: 255 255 255;
+  --background-mist-rgb: 243 244 246;
 
   /* Default Theme Mapping */
   --background: var(--background-paper);
