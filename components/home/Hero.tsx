@@ -78,22 +78,22 @@ export default function Hero() {
     >
       {/* Decorative Floating Images (Book Shapes) */}
       {/* Top Left */}
-      <div className="hero-image-tl absolute top-[10%] left-[5%] md:left-[10%] w-32 h-44 md:w-48 md:h-64 bg-white rounded-r-md rounded-l-sm shadow-2xl rotate-[-6deg] overflow-hidden z-0 border-l-4 border-gray-200">
+      <div className="hero-image-tl absolute top-[5%] left-[2%] md:top-[10%] md:left-[10%] w-24 h-36 md:w-48 md:h-64 bg-white rounded-r-md rounded-l-sm shadow-2xl rotate-[-6deg] overflow-hidden z-0 border-l-2 md:border-l-4 border-gray-200">
          <Image src="https://picsum.photos/seed/quiet1/400/600" alt="Book 1" fill className="object-cover" />
       </div>
 
       {/* Top Right */}
-      <div className="hero-image-tr absolute top-[15%] right-[5%] md:right-[10%] w-32 h-44 md:w-48 md:h-64 bg-white rounded-l-md rounded-r-sm shadow-2xl rotate-[12deg] overflow-hidden z-0 border-r-4 border-gray-200">
+      <div className="hero-image-tr absolute top-[8%] right-[2%] md:top-[15%] md:right-[10%] w-24 h-36 md:w-48 md:h-64 bg-white rounded-l-md rounded-r-sm shadow-2xl rotate-[12deg] overflow-hidden z-0 border-r-2 md:border-r-4 border-gray-200">
         <Image src="https://picsum.photos/seed/quiet2/400/600" alt="Book 2" fill className="object-cover" />
       </div>
 
       {/* Bottom Left */}
-      <div className="hero-image-bl absolute bottom-[15%] left-[8%] md:left-[15%] w-32 h-44 md:w-48 md:h-64 bg-white rounded-r-md rounded-l-sm shadow-2xl rotate-[6deg] overflow-hidden z-0 hidden md:block border-l-4 border-gray-200">
+      <div className="hero-image-bl absolute bottom-[8%] left-[2%] md:bottom-[15%] md:left-[15%] w-24 h-36 md:w-48 md:h-64 bg-white rounded-r-md rounded-l-sm shadow-2xl rotate-[6deg] overflow-hidden z-0 border-l-2 md:border-l-4 border-gray-200">
         <Image src="https://picsum.photos/seed/quiet3/400/600" alt="Book 3" fill className="object-cover" />
       </div>
 
       {/* Bottom Right */}
-      <div className="hero-image-br absolute bottom-[10%] right-[8%] md:right-[15%] w-32 h-44 md:w-48 md:h-64 bg-white rounded-l-md rounded-r-sm shadow-2xl rotate-[-8deg] overflow-hidden z-0 hidden md:block border-r-4 border-gray-200">
+      <div className="hero-image-br absolute bottom-[5%] right-[2%] md:bottom-[10%] md:right-[15%] w-24 h-36 md:w-48 md:h-64 bg-white rounded-l-md rounded-r-sm shadow-2xl rotate-[-8deg] overflow-hidden z-0 border-r-2 md:border-r-4 border-gray-200">
         <Image src="https://picsum.photos/seed/quiet4/400/600" alt="Book 4" fill className="object-cover" />
       </div>
 
