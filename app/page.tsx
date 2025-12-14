@@ -1,6 +1,6 @@
 import { getProducts } from "@/actions/get-products";
 import ProductCard from "@/components/product/ProductCard";
-import Link from "next/link";
+import Hero from "@/components/home/Hero";
 
 export const dynamic = "force-dynamic";
 
@@ -10,21 +10,7 @@ export default async function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-gradient-to-b from-white to-background-mist/30">
-        <h1 className="font-serif text-5xl md:text-6xl font-bold text-text-dark mb-6 tracking-tight">
-          Find Your Quiet Place
-        </h1>
-        <p className="text-lg md:text-xl text-text-light max-w-2xl mb-10 leading-relaxed">
-          Discover our collection of journals and spiritual growth tools
-          designed to help you pause, reflect, and connect.
-        </p>
-        <Link
-          href="#products"
-          className="bg-primary-blue text-white px-8 py-4 rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/20"
-        >
-          Shop Now
-        </Link>
-      </section>
+      <Hero />
 
       {/* Products Section */}
       <section id="products" className="container mx-auto px-4 py-20">
