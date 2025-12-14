@@ -78,3 +78,23 @@ model Address {
   order      Order    @relation(fields: [orderId], references: [id])
   orderId    String   @unique
 }
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name    String
+  email   String
+  message String
+}
+
+model FeedbackSubmission {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topic   String
+  message String
+  email   String?
+}
