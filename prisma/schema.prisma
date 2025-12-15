@@ -58,13 +58,10 @@ model OrderItem {
 model Customer {
   id        String   @id @default(uuid())
   email     String   @unique
-  passwordHash String?
   name      String?
   phone     String?
   orders    Order[]
   addresses Address[]
-  sessions  Session[]
-  passwordResetTokens PasswordResetToken[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -78,32 +75,8 @@ model Address {
   country    String   @default("Ghana")
   customer   Customer @relation(fields: [customerId], references: [id])
   customerId String
-  order      Order?   @relation(fields: [orderId], references: [id])
-  orderId    String?  @unique
-  isDefault  Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Session {
-  id         String   @id @default(uuid())
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  revokedAt  DateTime?
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model PasswordResetToken {
-  id         String   @id @default(uuid())
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  usedAt     DateTime?
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId String
-  createdAt  DateTime @default(now())
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    String   @unique
 }
 
 model ContactSubmission {

@@ -67,12 +67,6 @@ const Navbar = () => {
             >
               Outlets
             </Link>
-            <Link
-              href="/account"
-              className="text-sm font-medium text-text-light hover:text-primary-blue transition-colors"
-            >
-              Account
-            </Link>
           </nav>
 
           {/* Actions (Cart / Mobile Menu Placeholder) */}
