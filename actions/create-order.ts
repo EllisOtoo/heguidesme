@@ -2,6 +2,8 @@
 
 import { initializePayment } from "@/lib/paystack";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 interface CartItem {
   id: string; // Product ID (or a client-side ID for non-products like donation)
@@ -20,6 +22,7 @@ interface CreateOrderParams {
   region: string;
   amount: number; // In cents
   items: CartItem[];
+  shippingOptionId?: string;
 }
 
 export async function createOrder(data: CreateOrderParams) {
@@ -33,12 +36,28 @@ export async function createOrder(data: CreateOrderParams) {
 
     if (payment?.status && paymentUrl && reference) {
       await prisma.$transaction(async (tx) => {
-        const customerName = `${data.firstName} ${data.lastName}`.trim();
-        const customer = await tx.customer.upsert({
-          where: { email: data.email },
-          update: { name: customerName, phone: data.phone },
-          create: { email: data.email, name: customerName, phone: data.phone },
-        });
+        // Check if user is logged in
+        const session = await getServerSession(authOptions);
+        let customer;
+
+        if (session?.user?.id) {
+          // Use logged-in customer and update their info
+          customer = await tx.customer.update({
+            where: { id: session.user.id },
+            data: {
+              name: `${data.firstName} ${data.lastName}`.trim(),
+              phone: data.phone,
+            },
+          });
+        } else {
+          // Guest checkout - upsert customer by email
+          const customerName = `${data.firstName} ${data.lastName}`.trim();
+          customer = await tx.customer.upsert({
+            where: { email: data.email },
+            update: { name: customerName, phone: data.phone },
+            create: { email: data.email, name: customerName, phone: data.phone },
+          });
+        }
 
         const productIds = data.items
           .filter((item) => item.slug !== "donation")
@@ -99,6 +118,10 @@ export async function createOrder(data: CreateOrderParams) {
             totalAmount: data.amount,
             status: "PENDING",
             customerId: customer.id,
+            shippingOptionId: data.shippingOptionId,
+            shippingAmount: data.shippingOptionId 
+              ? (await tx.shippingOption.findUnique({ where: { id: data.shippingOptionId } }))?.price 
+              : undefined,
             ...(orderItems.length > 0 ? { items: { create: orderItems } } : {}),
           },
           select: { id: true },

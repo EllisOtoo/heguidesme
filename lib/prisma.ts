@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../prisma/generated/client";
 
 const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
@@ -14,7 +14,8 @@ const cachedPrismaLooksValid =
   "product" in cachedPrisma &&
   "order" in cachedPrisma &&
   "contactSubmission" in cachedPrisma &&
-  "feedbackSubmission" in cachedPrisma;
+  "feedbackSubmission" in cachedPrisma &&
+  "shippingOption" in cachedPrisma;
 
 export const prisma = cachedPrismaLooksValid ? cachedPrisma : createPrismaClient();
 

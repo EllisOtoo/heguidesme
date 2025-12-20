@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -43,6 +44,22 @@ model Order {
   
   items         OrderItem[]
   shippingAddress Address?
+  
+  shippingOption   ShippingOption? @relation(fields: [shippingOptionId], references: [id])
+  shippingOptionId String?
+  shippingAmount   Int? // Price snapshot at time of order
+}
+
+model ShippingOption {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Int      // Stored in cents
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  orders      Order[]
 }
 
 model OrderItem {
@@ -56,14 +73,45 @@ model OrderItem {
 }
 
 model Customer {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  phone     String?
-  orders    Order[]
-  addresses Address[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String?   // Optional to support guest checkout upgrades
+  name         String?
+  phone        String?
+  orders       Order[]
+  addresses    Address[]
+  accounts     Account[]
+  sessions     Session[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Account {
+  id                String   @id @default(uuid())
+  customerId        String
+  type              String
+  provider          String
+  providerAccountId String
+  customer          Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  customerId   String
+  expires      DateTime
+  customer     Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  email     String
+  tokenHash String    @unique // Store hashed token
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
 }
 
 model Address {

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 // Validation Schema
 const checkoutSchema = z.object({
@@ -17,26 +18,71 @@ const checkoutSchema = z.object({
   address: z.string().min(5, "Delivery address is required"),
   city: z.string().min(2, "City is required"),
   region: z.string().min(2, "Region is required"),
+  shippingOptionId: z.string().min(1, "Please select a shipping option"),
 });
 
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
+interface ShippingOption {
+    id: string;
+    name: string;
+    description: string | null;
+    price: number;
+}
+
 export default function CheckoutPage() {
   const { items, getCartTotal, hasHydrated } = useCartStore();
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [isLoadingShipping, setIsLoadingShipping] = useState(true);
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+        shippingOptionId: "",
+    }
   });
 
+  const selectedShippingId = form.watch("shippingOptionId");
+
+  useEffect(() => {
+    async function fetchShipping() {
+        try {
+            const res = await fetch("/api/shipping");
+            const data = await res.json();
+            
+            if (Array.isArray(data)) {
+                setShippingOptions(data);
+                if (data.length > 0) {
+                    form.setValue("shippingOptionId", data[0].id);
+                }
+            } else {
+                console.error("Shipping API returned non-array data:", data);
+                setShippingOptions([]);
+            }
+        } catch (error) {
+            console.error("Failed to load shipping options", error);
+            setShippingOptions([]);
+        } finally {
+            setIsLoadingShipping(false);
+        }
+    }
+    fetchShipping();
+  }, [form]);
+
   const subtotal = getCartTotal();
-  const shipping = 2500; // 25.00 GHS
-  const total = subtotal + shipping;
+  const selectedShipping = Array.isArray(shippingOptions) 
+    ? shippingOptions.find(opt => opt.id === selectedShippingId)
+    : undefined;
+    
+  const shippingAmount = selectedShipping?.price || 0;
+  const total = subtotal + shippingAmount;
 
   const onSubmit = async (data: CheckoutFormData) => {
     try {
         const result = await createOrder({
             ...data,
             amount: total,
+            shippingOptionId: data.shippingOptionId,
             items: items.map(item => ({
                 id: item.id,
                 slug: item.slug,
@@ -46,8 +92,6 @@ export default function CheckoutPage() {
         });
 
         if (result.success && result.paymentUrl) {
-            // Save cart items to local storage or session storage if needed for
-            // post-payment verification (optional, or we rely on cart store persisting until clearCart is called on success page)
             window.location.assign(result.paymentUrl);
         } else {
             console.error("Payment Init Failed", result.error);
@@ -176,12 +220,56 @@ export default function CheckoutPage() {
                     <option value="Western">Western</option>
                     <option value="Volta">Volta</option>
                     <option value="Northern">Northern</option>
-                    {/* Add others as needed */}
                 </select>
                  {form.formState.errors.region && (
                   <p className="text-red-500 text-xs">{form.formState.errors.region.message}</p>
                 )}
               </div>
+            </div>
+
+            {/* Shipping Options Selection */}
+            <div className="space-y-4 pt-4 border-t border-gray-100">
+                <h3 className="font-serif text-lg font-bold text-text-dark">Shipping Method</h3>
+                {isLoadingShipping ? (
+                    <div className="animate-pulse space-y-3">
+                        <div className="h-16 bg-gray-100 rounded-xl" />
+                        <div className="h-16 bg-gray-100 rounded-xl" />
+                    </div>
+                ) : (
+                    <div className="space-y-3">
+                        {shippingOptions.map((option) => (
+                            <label 
+                                key={option.id}
+                                className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all ${
+                                    selectedShippingId === option.id 
+                                    ? "border-primary-blue bg-blue-50/30 ring-1 ring-primary-blue" 
+                                    : "border-gray-200 hover:border-gray-300"
+                                }`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <input 
+                                        type="radio" 
+                                        value={option.id} 
+                                        {...form.register("shippingOptionId")}
+                                        className="w-4 h-4 text-primary-blue border-gray-300 focus:ring-primary-blue"
+                                    />
+                                    <div>
+                                        <p className="font-medium text-text-dark text-sm">{option.name}</p>
+                                        {option.description && (
+                                            <p className="text-text-light text-xs">{option.description}</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <p className="font-bold text-text-dark text-sm">
+                                    {option.price === 0 ? "FREE" : new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS" }).format(option.price / 100)}
+                                </p>
+                            </label>
+                        ))}
+                        {form.formState.errors.shippingOptionId && (
+                            <p className="text-red-500 text-xs">{form.formState.errors.shippingOptionId.message}</p>
+                        )}
+                    </div>
+                )}
             </div>
 
             <button
@@ -231,7 +319,11 @@ export default function CheckoutPage() {
             </div>
             <div className="flex justify-between text-text-light">
               <span>Shipping</span>
-              <span>{new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS" }).format(shipping / 100)}</span>
+              <span>
+                  {shippingAmount === 0 && selectedShippingId 
+                    ? "FREE" 
+                    : new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS" }).format(shippingAmount / 100)}
+              </span>
             </div>
             <div className="flex justify-between text-text-dark font-bold text-lg pt-2 border-t border-gray-200 mt-2">
               <span>Total</span>

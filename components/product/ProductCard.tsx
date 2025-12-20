@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Product } from "@prisma/client";
+import { Product } from "../../prisma/generated/client";
 
 interface ProductCardProps {
   product: Product;
