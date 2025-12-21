@@ -27,7 +27,7 @@ const createFabricTextures = () => {
     return { map: fallback, bump: fallback };
   }
 
-  baseContext.fillStyle = "#7b1526";
+  baseContext.fillStyle = "#ad1413";
   baseContext.fillRect(0, 0, size, size);
 
   for (let i = 0; i < size; i += 4) {
@@ -78,33 +78,6 @@ const createFabricTextures = () => {
   bump.repeat.set(4, 4);
 
   return { map, bump };
-};
-
-const createTitleTexture = (text: string) => {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 256;
-  const context = canvas.getContext("2d");
-
-  if (!context) {
-    const fallback = new THREE.Texture();
-    fallback.needsUpdate = true;
-    return fallback;
-  }
-
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillStyle = "rgba(255, 255, 255, 0.96)";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.shadowColor = "rgba(0, 0, 0, 0.25)";
-  context.shadowBlur = 12;
-  context.font = '600 96px "Playfair Display", serif';
-  context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
-  return texture;
 };
 
 export default function CurtainReveal() {
@@ -240,7 +213,7 @@ export default function CurtainReveal() {
 
     const { map, bump } = createFabricTextures();
     const curtainMaterial = new THREE.MeshPhysicalMaterial({
-      color: "#7b1526",
+      color: "#ad1413",
       roughness: 0.8,
       metalness: 0.05,
       clearcoat: 0.2,
@@ -347,20 +320,8 @@ export default function CurtainReveal() {
     book.castShadow = true;
     book.position.set(0, -0.35, -0.2);
 
-    const titleTexture = createTitleTexture("The Quiet Time Journal");
-    const titleMaterial = new THREE.MeshStandardMaterial({
-      map: titleTexture,
-      transparent: true,
-      roughness: 0.6,
-      metalness: 0.1,
-    });
-    const titleGeometry = new THREE.PlaneGeometry(1.9, 0.45);
-    const titlePlane = new THREE.Mesh(titleGeometry, titleMaterial);
-    titlePlane.position.set(0, 0.55, -0.12);
-    titlePlane.castShadow = false;
-
     const productGroup = new THREE.Group();
-    productGroup.add(pedestal, book, titlePlane);
+    productGroup.add(pedestal, book);
     scene.add(productGroup);
 
     const updateCurtain = (
@@ -452,9 +413,6 @@ export default function CurtainReveal() {
       coverMaterial.dispose();
       edgeMaterial.dispose();
       spineMaterial.dispose();
-      titleMaterial.dispose();
-      titleTexture.dispose();
-      titleGeometry.dispose();
       logoTexture.dispose();
       map.dispose();
       bump.dispose();
@@ -516,9 +474,11 @@ export default function CurtainReveal() {
                 The Quiet Time Journal
               </span>
             </div>
-            <span className="text-xs uppercase tracking-[0.4em] text-[#cfd8e2]">
-              {stage < 3 ? "Taps to reveal" : "Product revealed"}
-            </span>
+            {stage < 3 && (
+              <span className="text-xs uppercase tracking-[0.4em] text-[#cfd8e2]">
+                Taps to reveal
+              </span>
+            )}
           </div>
         </div>
 
