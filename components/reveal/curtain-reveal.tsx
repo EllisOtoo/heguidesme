@@ -282,9 +282,7 @@ export default function CurtainReveal() {
     pedestal.castShadow = true;
     pedestal.receiveShadow = true;
 
-    const logoTexture = new THREE.TextureLoader().load(
-      "/images/Heguideme App Icon.png"
-    );
+    const logoTexture = new THREE.TextureLoader().load("/images/Splash.png");
     logoTexture.colorSpace = THREE.SRGBColorSpace;
 
     const coverMaterial = new THREE.MeshStandardMaterial({
@@ -313,6 +311,21 @@ export default function CurtainReveal() {
       spineMaterial,
     ];
 
+    bookMaterials.forEach((material) => {
+      material.colorWrite = false;
+      material.depthWrite = false;
+    });
+
+    const imageMaterial = new THREE.MeshStandardMaterial({
+      map: logoTexture,
+      transparent: true,
+      roughness: 0.6,
+      metalness: 0.1,
+    });
+    const imageGeometry = new THREE.PlaneGeometry(0.66, 1.35);
+    const imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+    imagePlane.position.set(0, -0.2, -0.13);
+
     const book = new THREE.Mesh(
       new THREE.BoxGeometry(0.9, 0.9, 0.12),
       bookMaterials
@@ -321,7 +334,7 @@ export default function CurtainReveal() {
     book.position.set(0, -0.35, -0.2);
 
     const productGroup = new THREE.Group();
-    productGroup.add(pedestal, book);
+    productGroup.add(pedestal, book, imagePlane);
     scene.add(productGroup);
 
     const updateCurtain = (
@@ -413,6 +426,8 @@ export default function CurtainReveal() {
       coverMaterial.dispose();
       edgeMaterial.dispose();
       spineMaterial.dispose();
+      imageMaterial.dispose();
+      imageGeometry.dispose();
       logoTexture.dispose();
       map.dispose();
       bump.dispose();
