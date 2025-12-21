@@ -502,7 +502,7 @@ export default function CurtainReveal() {
             {[1, 2, 3].map((step) => (
               <span
                 key={step}
-                className={`h-2.5 w-8 rounded-full transition-all ${
+                className={`h-1 w-8 rounded-full transition-all ${
                   stage >= step
                     ? "bg-accent-green shadow-[0_0_12px_rgba(187,225,65,0.6)]"
                     : "bg-white/20"
