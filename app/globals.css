@@ -10,18 +10,18 @@
     Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
 
   /* Brand Colors */
-  --primary-blue: #007BC2; /* Grace Blue */
-  --accent-green: #BBE141; /* Life Leaf */
+  --primary-blue: #007bc2; /* Grace Blue */
+  --accent-green: #c0d218; /* Life Leaf */
 
   /* RGB helpers (for gradients with alpha) */
   --primary-blue-rgb: 0 123 194;
   --accent-green-rgb: 187 225 65;
-  
+
   /* Neutrals */
-  --text-dark: #1F2937;    /* Ink */
-  --text-light: #6B7280;   /* Stone */
-  --background-paper: #FFFFFF; /* Paper */
-  --background-mist: #F3F4F6;  /* Mist */
+  --text-dark: #1f2937; /* Ink */
+  --text-light: #6b7280; /* Stone */
+  --background-paper: #ffffff; /* Paper */
+  --background-mist: #f3f4f6; /* Mist */
 
   /* RGB helpers (for gradients with alpha) */
   --text-dark-rgb: 31 41 55;
@@ -37,7 +37,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  
+
   --color-primary-blue: var(--primary-blue);
   --color-accent-green: var(--accent-green);
   --color-text-dark: var(--text-dark);

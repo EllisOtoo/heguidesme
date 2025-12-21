@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent, MouseEvent } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "three";
 
@@ -489,6 +490,20 @@ export default function CurtainReveal() {
                 HeGuidesme App
               </span>
             </div>
+            {stage === 3 && (
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-xs uppercase tracking-[0.35em] text-[#cfd8e2]">
+                  Get early access
+                </span>
+                <Link
+                  href="/donate"
+                  onClick={(event) => event.stopPropagation()}
+                  className="rounded-full bg-accent-green px-6 py-3 text-sm font-semibold text-[#0b1b2a] transition hover:opacity-90"
+                >
+                  Donate Now
+                </Link>
+              </div>
+            )}
             {stage < 3 && (
               <span className="text-xs uppercase tracking-[0.4em] text-[#cfd8e2]">
                 Taps to reveal
