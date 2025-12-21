@@ -5,7 +5,8 @@ import type { KeyboardEvent, MouseEvent } from "react";
 import gsap from "gsap";
 import * as THREE from "three";
 
-const REVEAL_STEPS = [0, 0.48, 0.72, 1];
+const DESKTOP_REVEAL_STEPS = [0, 0.48, 0.72, 1];
+const MOBILE_REVEAL_STEPS = [0, 0.12, 0.45, 1];
 const STAGE_COPY = [
   "Tap anywhere to pull the curtain.",
   "A glimpse of the story within.",
@@ -85,6 +86,7 @@ export default function CurtainReveal() {
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const prefersReducedMotion = useRef(false);
   const [stage, setStage] = useState(0);
+  const [revealSteps, setRevealSteps] = useState(DESKTOP_REVEAL_STEPS);
 
   useEffect(() => {
     prefersReducedMotion.current = window.matchMedia(
@@ -93,7 +95,32 @@ export default function CurtainReveal() {
   }, []);
 
   useEffect(() => {
-    const target = REVEAL_STEPS[stage] ?? 1;
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const updateSteps = () => {
+      setRevealSteps(
+        mediaQuery.matches ? MOBILE_REVEAL_STEPS : DESKTOP_REVEAL_STEPS
+      );
+    };
+
+    updateSteps();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", updateSteps);
+    } else {
+      mediaQuery.addListener(updateSteps);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", updateSteps);
+      } else {
+        mediaQuery.removeListener(updateSteps);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const target = revealSteps[stage] ?? 1;
 
     if (prefersReducedMotion.current) {
       openRef.current.value = target;
@@ -110,7 +137,7 @@ export default function CurtainReveal() {
     return () => {
       tweenRef.current?.kill();
     };
-  }, [stage]);
+  }, [revealSteps, stage]);
 
   useEffect(() => {
     const container = containerRef.current;
