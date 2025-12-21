@@ -11,7 +11,7 @@ export default async function Home() {
   console.log (products, "products");
 
 
-  return <div>In development</div>
+  // return <div>In development</div>
   return (
     <div>
       {/* Hero Section */}
