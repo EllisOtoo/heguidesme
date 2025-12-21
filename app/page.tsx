@@ -8,6 +8,10 @@ export default async function Home() {
   // return <div>Test</div>
   const products = await getProducts();
 
+  console.log (products, "products");
+
+
+  return <div>In development</div>
   return (
     <div>
       {/* Hero Section */}
