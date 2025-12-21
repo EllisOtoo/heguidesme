@@ -6,8 +6,9 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
 interface CartItem {
-  id: string; // Product ID (or a client-side ID for non-products like donation)
-  slug: string; // Used to identify special items like "donation"
+  id: string;
+  variantId?: string;
+  slug: string;
   quantity: number;
   price: number;
 }
@@ -94,6 +95,17 @@ export async function createOrder(data: CreateOrderParams) {
           donationProductId = donationProduct.id;
         }
 
+        const variantIds = data.items
+          .map(item => item.variantId)
+          .filter((id): id is string => !!id);
+
+        const validVariantIds = variantIds.length > 0
+          ? new Set((await tx.productVariant.findMany({
+              where: { id: { in: variantIds } },
+              select: { id: true }
+            })).map(v => v.id))
+          : new Set<string>();
+
         const orderItems = data.items
           .map((item) => {
             if (item.quantity < 1) return null;
@@ -108,9 +120,20 @@ export async function createOrder(data: CreateOrderParams) {
             }
 
             if (!validProductIds.has(item.id)) return null;
-            return { productId: item.id, quantity: item.quantity, price: item.price };
+            
+            // If variantId is provided, ensure it's valid
+            if (item.variantId && !validVariantIds.has(item.variantId)) {
+                return null;
+            }
+
+            return { 
+                productId: item.id, 
+                variantId: item.variantId,
+                quantity: item.quantity, 
+                price: item.price 
+            };
           })
-          .filter(Boolean) as Array<{ productId: string; quantity: number; price: number }>;
+          .filter(Boolean) as Array<{ productId: string; variantId?: string; quantity: number; price: number }>;
 
         const order = await tx.order.create({
           data: {

@@ -468,13 +468,13 @@ export default function CurtainReveal() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,rgba(0,123,194,0.35),rgba(11,27,42,0)_60%),radial-gradient(90%_60%_at_50%_100%,rgba(187,225,65,0.18),rgba(11,27,42,0)_60%)]" />
       <div ref={containerRef} className="absolute inset-0" aria-hidden="true" />
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-between px-6 pb-16 pt-24 text-center">
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-between px-6 pb-12 pt-12 text-center">
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.4em] text-[#b8c7d8]">
-            Product Reveal
+            Unveiling A New Era
           </p>
           <div className="mt-6 flex flex-col items-center gap-3">
-            <div className="relative flex h-[5.5rem] items-center justify-center">
+            <div className="relative flex h-[5rem] items-center justify-center">
               <span
                 className={`absolute text-[clamp(3rem,10vw,5.5rem)] font-semibold tracking-[0.2em] text-white transition-opacity duration-500 ${
                   stage < 3 ? "opacity-100" : "opacity-0"

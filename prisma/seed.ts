@@ -42,6 +42,31 @@ async function main() {
   })
   console.log({ journal });
 
+  const journalVariants = [
+    { name: 'Blue Cover', inventory: 40, image: 'https://placehold.co/600x800/0000FF/FFFFFF?text=Blue+Journal' },
+    { name: 'Pink Cover', inventory: 30, image: 'https://placehold.co/600x800/FFC0CB/000000?text=Pink+Journal' },
+    { name: 'Grey Cover', inventory: 30, image: 'https://placehold.co/600x800/808080/FFFFFF?text=Grey+Journal' },
+  ];
+
+  for (const v of journalVariants) {
+    await prisma.productVariant.upsert({
+      where: { 
+        id: `journal-${v.name.toLowerCase().replace(/\s+/g, '-')}` 
+      },
+      update: {
+        inventory: v.inventory,
+        image: v.image,
+      },
+      create: {
+        id: `journal-${v.name.toLowerCase().replace(/\s+/g, '-')}`,
+        name: v.name,
+        inventory: v.inventory,
+        image: v.image,
+        productId: journal.id,
+      }
+    });
+  }
+
   // 1b. Donation (hidden from shop listings)
   const donation = await prisma.product.upsert({
     where: { slug: 'donation' },
@@ -74,6 +99,32 @@ async function main() {
   })
   console.log({ bundle });
 
+  const bundleVariants = [
+    { name: 'Standard Edition', inventory: 15, image: 'https://placehold.co/600x800/EEE/31343C?text=Standard+Bundle' },
+    { name: 'Premium Edition', inventory: 10, image: 'https://placehold.co/600x800/D4AF37/000000?text=Premium+Bundle', price: 20000 },
+  ];
+
+  for (const v of bundleVariants) {
+    await prisma.productVariant.upsert({
+      where: { 
+        id: `bundle-${v.name.toLowerCase().replace(/\s+/g, '-')}` 
+      },
+      update: {
+        inventory: v.inventory,
+        image: v.image,
+        price: v.price,
+      },
+      create: {
+        id: `bundle-${v.name.toLowerCase().replace(/\s+/g, '-')}`,
+        name: v.name,
+        inventory: v.inventory,
+        image: v.image,
+        price: v.price,
+        productId: bundle.id,
+      }
+    });
+  }
+
   // 2b. Scripture Card (GHS 5)
   const card = await prisma.product.upsert({
     where: { slug: 'scripture-card' },
@@ -91,6 +142,72 @@ async function main() {
     },
   })
   console.log({ card });
+
+  const cardVariants = [
+    { name: 'Strength & Courage', inventory: 100, image: 'https://placehold.co/600x800/8B4513/FFFFFF?text=Strength+Card' },
+    { name: 'Peace & Rest', inventory: 150, image: 'https://placehold.co/600x800/008080/FFFFFF?text=Peace+Card' },
+    { name: 'Hope & Joy', inventory: 120, image: 'https://placehold.co/600x800/FFD700/000000?text=Hope+Card' },
+    { name: 'Faith & Trust', inventory: 130, image: 'https://placehold.co/600x800/4B0082/FFFFFF?text=Faith+Card' },
+  ];
+
+  for (const v of cardVariants) {
+    await prisma.productVariant.upsert({
+      where: { 
+        id: `card-${v.name.toLowerCase().replace(/\s+/g, '-')}` 
+      },
+      update: {
+        inventory: v.inventory,
+        image: v.image,
+      },
+      create: {
+        id: `card-${v.name.toLowerCase().replace(/\s+/g, '-')}`,
+        name: v.name,
+        inventory: v.inventory,
+        image: v.image,
+        productId: card.id,
+      }
+    });
+  }
+
+  // 2c. Bible Study Kit
+  const studyKit = await prisma.product.upsert({
+    where: { slug: 'bible-study-kit' },
+    update: {},
+    create: {
+        slug: 'bible-study-kit',
+        name: 'Daily Bible Study Kit',
+        description: 'A complete set for your focused Bible study time. Includes highlighters, sticky notes, and a study guide.',
+        price: 4500, // 45.00 GHS
+        images: ['https://placehold.co/600x800/EEE/31343C?text=Study+Kit'],
+        category: 'BUNDLE',
+        inventory: 60
+    },
+  })
+  console.log({ studyKit });
+
+  const kitVariants = [
+    { name: 'Pastel Edition', inventory: 30, image: 'https://placehold.co/600x800/FFB6C1/000000?text=Pastel+Kit' },
+    { name: 'Neon Edition', inventory: 30, image: 'https://placehold.co/600x800/39FF14/000000?text=Neon+Kit' },
+  ];
+
+  for (const v of kitVariants) {
+    await prisma.productVariant.upsert({
+      where: { 
+        id: `kit-${v.name.toLowerCase().replace(/\s+/g, '-')}` 
+      },
+      update: {
+        inventory: v.inventory,
+        image: v.image,
+      },
+      create: {
+        id: `kit-${v.name.toLowerCase().replace(/\s+/g, '-')}`,
+        name: v.name,
+        inventory: v.inventory,
+        image: v.image,
+        productId: studyKit.id,
+      }
+    });
+  }
 
   // 3. Shipping Options
   const shippingOptions = [

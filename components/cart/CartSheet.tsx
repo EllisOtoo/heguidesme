@@ -62,7 +62,7 @@ export default function CartSheet() {
             </div>
           ) : (
             items.map((item) => (
-              <div key={item.id} className="flex gap-4">
+              <div key={`${item.id}-${item.variantId || 'default'}`} className="flex gap-4">
                 {/* Image */}
                 <div className="relative w-24 h-32 bg-background-mist rounded-lg overflow-hidden flex-shrink-0">
                    {item.image ? (
@@ -84,8 +84,13 @@ export default function CartSheet() {
                         <h3 className="font-serif font-medium text-text-dark line-clamp-2">
                         {item.name}
                         </h3>
+                        {item.variantName && (
+                          <p className="text-xs text-text-light mt-0.5">
+                            {item.variantName}
+                          </p>
+                        )}
                         <button 
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeItem(item.id, item.variantId)}
                             className="text-text-light hover:text-red-500 p-1"
                         >
                             <X className="w-4 h-4" />
@@ -99,14 +104,14 @@ export default function CartSheet() {
                   {/* Quantity Controls */}
                   <div className="flex items-center gap-3">
                     <button 
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity - 1, item.variantId)}
                         className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-text-light hover:border-gray-300 transition-colors"
                     >
                         <Minus className="w-3 h-3" />
                     </button>
                     <span className="w-4 text-center text-sm font-medium">{item.quantity}</span>
                     <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.quantity + 1, item.variantId)}
                         className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-text-light hover:border-gray-300 transition-colors"
                     >
                         <Plus className="w-3 h-3" />
@@ -131,10 +136,16 @@ export default function CartSheet() {
             <Link 
               href="/checkout"
               onClick={closeCart}
-              className="block w-full bg-primary-blue text-white text-center font-medium py-4 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/10"
+              className="block w-full bg-primary-blue text-white text-center font-medium py-4 rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/10 mb-3"
             >
               Secure Checkout
             </Link>
+            <button 
+              onClick={closeCart}
+              className="block w-full text-center text-primary-blue font-medium py-2 hover:underline transition-all"
+            >
+              Continue Shopping
+            </button>
           </div>
         )}
       </div>

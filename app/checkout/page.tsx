@@ -85,6 +85,7 @@ export default function CheckoutPage() {
             shippingOptionId: data.shippingOptionId,
             items: items.map(item => ({
                 id: item.id,
+                variantId: item.variantId,
                 slug: item.slug,
                 quantity: item.quantity,
                 price: item.price
@@ -287,7 +288,7 @@ export default function CheckoutPage() {
           <h2 className="font-serif text-xl font-bold text-text-dark mb-6">Order Summary</h2>
           <div className="space-y-4 mb-8">
             {items.map((item) => (
-              <div key={item.id} className="flex gap-4">
+              <div key={`${item.id}-${item.variantId || 'default'}`} className="flex gap-4">
                 <div className="relative w-16 h-16 bg-white rounded-lg overflow-hidden flex-shrink-0">
                     {item.image ? (
                          <Image src={item.image} alt={item.name} fill className="object-cover" />
@@ -301,6 +302,9 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium text-text-dark text-sm line-clamp-2">{item.name}</h3>
+                  {item.variantName && (
+                    <p className="text-text-light text-[10px] mt-0.5">{item.variantName}</p>
+                  )}
                   <p className="text-text-light text-xs mt-1">
                     {new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS" }).format(item.price / 100)}
                   </p>

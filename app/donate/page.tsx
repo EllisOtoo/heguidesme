@@ -1,18 +1,16 @@
 "use client";
 
-import { useCartStore } from "@/store/cart-store";
 import { useState } from "react";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // Preset donation amounts in GHS
-const PRESET_AMOUNTS = [100, 200, 500, 1000];
+const PRESET_AMOUNTS = [1, 200, 500, 1000];
 
 export default function DonatePage() {
   const [amount, setAmount] = useState<number | "">("");
   const [customAmount, setCustomAmount] = useState("");
 
-  const addItem = useCartStore((state) => state.addItem);
   const router = useRouter();
 
   const handleDonate = () => {
@@ -21,16 +19,8 @@ export default function DonatePage() {
 
     if (!finalAmount || finalAmount <= 0) return;
 
-    addItem({
-      id: `donation-${Date.now()}`, // Unique ID for each donation
-      slug: "donation",
-      name: "Donation",
-      price: finalAmount * 100, // Store in cents
-      image: "", // No image for donation
-      category: "DONATION",
-    });
-
-    router.push("/checkout");
+    // Redirect to donation checkout with amount in cents as URL param
+    router.push(`/donate/checkout?amount=${finalAmount * 100}`);
   };
 
   return (
