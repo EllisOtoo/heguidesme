@@ -5,7 +5,7 @@ import type { KeyboardEvent, MouseEvent } from "react";
 import gsap from "gsap";
 import * as THREE from "three";
 
-const REVEAL_STEPS = [0, 0.38, 0.72, 1];
+const REVEAL_STEPS = [0, 0.48, 0.72, 1];
 const STAGE_COPY = [
   "Tap anywhere to pull the curtain.",
   "A glimpse of the story within.",
@@ -26,12 +26,12 @@ const createFabricTextures = () => {
     return { map: fallback, bump: fallback };
   }
 
-  baseContext.fillStyle = "#113154";
+  baseContext.fillStyle = "#7b1526";
   baseContext.fillRect(0, 0, size, size);
 
   for (let i = 0; i < size; i += 4) {
     baseContext.strokeStyle =
-      i % 8 === 0 ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.08)";
+      i % 8 === 0 ? "rgba(255, 230, 230, 0.12)" : "rgba(0, 0, 0, 0.08)";
     baseContext.beginPath();
     baseContext.moveTo(0, i + Math.random() * 2);
     baseContext.lineTo(size, i + Math.random() * 2);
@@ -39,7 +39,7 @@ const createFabricTextures = () => {
   }
 
   for (let i = 0; i < size; i += 6) {
-    baseContext.strokeStyle = "rgba(255, 255, 255, 0.04)";
+    baseContext.strokeStyle = "rgba(255, 220, 220, 0.08)";
     baseContext.beginPath();
     baseContext.moveTo(i, 0);
     baseContext.lineTo(i + Math.random() * 2, size);
@@ -63,17 +63,12 @@ const createFabricTextures = () => {
     return { map, bump: fallback };
   }
 
-  bumpContext.fillStyle = "#808080";
+  bumpContext.fillStyle = "#8a7a7a";
   bumpContext.fillRect(0, 0, size, size);
   for (let i = 0; i < 1400; i += 1) {
     const tone = 90 + Math.random() * 80;
     bumpContext.fillStyle = `rgb(${tone}, ${tone}, ${tone})`;
-    bumpContext.fillRect(
-      Math.random() * size,
-      Math.random() * size,
-      2,
-      2
-    );
+    bumpContext.fillRect(Math.random() * size, Math.random() * size, 2, 2);
   }
 
   const bump = new THREE.CanvasTexture(bumpCanvas);
@@ -124,7 +119,7 @@ export default function CurtainReveal() {
     }
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog("#0b1b2a", 3, 8);
+    scene.fog = new THREE.Fog("#1a1016", 3, 8);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -134,7 +129,7 @@ export default function CurtainReveal() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.35;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
@@ -143,12 +138,12 @@ export default function CurtainReveal() {
     camera.position.set(0, 0.2, 3.35);
     camera.lookAt(0, 0.05, 0);
 
-    const ambientLight = new THREE.AmbientLight("#b8c7d8", 0.35);
+    const ambientLight = new THREE.AmbientLight("#f1d7d7", 0.55);
     scene.add(ambientLight);
 
     const spotLight = new THREE.SpotLight(
-      "#ffffff",
-      1.1,
+      "#ffe6e0",
+      1.35,
       12,
       Math.PI / 6,
       0.3,
@@ -160,8 +155,8 @@ export default function CurtainReveal() {
     spotLight.shadow.radius = 3.5;
     scene.add(spotLight);
 
-    const fillLight = new THREE.PointLight("#82b8ff", 0.5, 6);
-    fillLight.position.set(-2.3, 0.6, 1.4);
+    const fillLight = new THREE.PointLight("#ffb6b1", 0.75, 6);
+    fillLight.position.set(-2.1, 0.8, 1.2);
     scene.add(fillLight);
 
     const floorMaterial = new THREE.MeshStandardMaterial({
@@ -169,7 +164,10 @@ export default function CurtainReveal() {
       roughness: 0.95,
       metalness: 0.05,
     });
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), floorMaterial);
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(10, 10),
+      floorMaterial
+    );
     floor.receiveShadow = true;
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -1.25;
@@ -188,13 +186,15 @@ export default function CurtainReveal() {
 
     const { map, bump } = createFabricTextures();
     const curtainMaterial = new THREE.MeshPhysicalMaterial({
-      color: "#153b63",
+      color: "#7b1526",
       roughness: 0.8,
       metalness: 0.05,
       clearcoat: 0.2,
       clearcoatRoughness: 0.6,
       sheen: 0.7,
-      sheenColor: new THREE.Color("#a5bdd8"),
+      sheenColor: new THREE.Color("#d1a1a8"),
+      emissive: new THREE.Color("#2a0a12"),
+      emissiveIntensity: 0.25,
       sheenRoughness: 0.8,
       map,
       bumpMap: bump,
@@ -317,8 +317,7 @@ export default function CurtainReveal() {
         const v = (y + curtainHeight / 2) / curtainHeight;
         const fold =
           Math.sin(u * Math.PI * foldCount + time * 0.9) * foldAmplitude;
-        const flutter =
-          Math.sin((v * 9 + u * 4) + time * 1.6) * flutterAmplitude;
+        const flutter = Math.sin(v * 9 + u * 4 + time * 1.6) * flutterAmplitude;
 
         position.array[index + 2] = z + fold + flutter;
       }
