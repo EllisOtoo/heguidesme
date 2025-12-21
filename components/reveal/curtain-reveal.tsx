@@ -27,12 +27,12 @@ const createFabricTextures = () => {
     return { map: fallback, bump: fallback };
   }
 
-  baseContext.fillStyle = "#ad1413";
+  baseContext.fillStyle = "#c51a19";
   baseContext.fillRect(0, 0, size, size);
 
   for (let i = 0; i < size; i += 4) {
     baseContext.strokeStyle =
-      i % 8 === 0 ? "rgba(255, 230, 230, 0.12)" : "rgba(0, 0, 0, 0.08)";
+      i % 8 === 0 ? "rgba(255, 235, 235, 0.16)" : "rgba(0, 0, 0, 0.06)";
     baseContext.beginPath();
     baseContext.moveTo(0, i + Math.random() * 2);
     baseContext.lineTo(size, i + Math.random() * 2);
@@ -40,7 +40,7 @@ const createFabricTextures = () => {
   }
 
   for (let i = 0; i < size; i += 6) {
-    baseContext.strokeStyle = "rgba(255, 220, 220, 0.08)";
+    baseContext.strokeStyle = "rgba(255, 230, 230, 0.12)";
     baseContext.beginPath();
     baseContext.moveTo(i, 0);
     baseContext.lineTo(i + Math.random() * 2, size);
@@ -146,7 +146,7 @@ export default function CurtainReveal() {
     }
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog("#1a1016", 3, 8);
+    scene.fog = new THREE.Fog("#2a1218", 3, 8);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -156,7 +156,7 @@ export default function CurtainReveal() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.5;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
@@ -165,12 +165,12 @@ export default function CurtainReveal() {
     camera.position.set(0, 0.2, 3.35);
     camera.lookAt(0, 0.05, 0);
 
-    const ambientLight = new THREE.AmbientLight("#f1d7d7", 0.55);
+    const ambientLight = new THREE.AmbientLight("#ffd4d1", 0.65);
     scene.add(ambientLight);
 
     const spotLight = new THREE.SpotLight(
-      "#ffe6e0",
-      1.35,
+      "#ffe1dd",
+      1.6,
       12,
       Math.PI / 6,
       0.3,
@@ -182,7 +182,7 @@ export default function CurtainReveal() {
     spotLight.shadow.radius = 3.5;
     scene.add(spotLight);
 
-    const fillLight = new THREE.PointLight("#ffb6b1", 0.75, 6);
+    const fillLight = new THREE.PointLight("#ffc2bd", 0.9, 6);
     fillLight.position.set(-2.1, 0.8, 1.2);
     scene.add(fillLight);
 
@@ -213,15 +213,15 @@ export default function CurtainReveal() {
 
     const { map, bump } = createFabricTextures();
     const curtainMaterial = new THREE.MeshPhysicalMaterial({
-      color: "#ad1413",
+      color: "#c51a19",
       roughness: 0.8,
       metalness: 0.05,
       clearcoat: 0.2,
       clearcoatRoughness: 0.6,
       sheen: 0.7,
       sheenColor: new THREE.Color("#d1a1a8"),
-      emissive: new THREE.Color("#2a0a12"),
-      emissiveIntensity: 0.25,
+      emissive: new THREE.Color("#4a0a0a"),
+      emissiveIntensity: 0.4,
       sheenRoughness: 0.8,
       map,
       bumpMap: bump,
