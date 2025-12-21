@@ -27,12 +27,12 @@ const createFabricTextures = () => {
     return { map: fallback, bump: fallback };
   }
 
-  baseContext.fillStyle = "#c51a19";
+  baseContext.fillStyle = "#b21918";
   baseContext.fillRect(0, 0, size, size);
 
   for (let i = 0; i < size; i += 4) {
     baseContext.strokeStyle =
-      i % 8 === 0 ? "rgba(255, 235, 235, 0.16)" : "rgba(0, 0, 0, 0.06)";
+      i % 8 === 0 ? "rgba(255, 230, 230, 0.14)" : "rgba(0, 0, 0, 0.07)";
     baseContext.beginPath();
     baseContext.moveTo(0, i + Math.random() * 2);
     baseContext.lineTo(size, i + Math.random() * 2);
@@ -40,7 +40,7 @@ const createFabricTextures = () => {
   }
 
   for (let i = 0; i < size; i += 6) {
-    baseContext.strokeStyle = "rgba(255, 230, 230, 0.12)";
+    baseContext.strokeStyle = "rgba(255, 226, 226, 0.1)";
     baseContext.beginPath();
     baseContext.moveTo(i, 0);
     baseContext.lineTo(i + Math.random() * 2, size);
@@ -156,7 +156,7 @@ export default function CurtainReveal() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.5;
+    renderer.toneMappingExposure = 1.42;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
@@ -165,12 +165,12 @@ export default function CurtainReveal() {
     camera.position.set(0, 0.2, 3.35);
     camera.lookAt(0, 0.05, 0);
 
-    const ambientLight = new THREE.AmbientLight("#ffd4d1", 0.65);
+    const ambientLight = new THREE.AmbientLight("#fff", 0.6);
     scene.add(ambientLight);
 
     const spotLight = new THREE.SpotLight(
-      "#ffe1dd",
-      1.6,
+      "#ffff",
+      1.5,
       12,
       Math.PI / 6,
       0.3,
@@ -182,7 +182,7 @@ export default function CurtainReveal() {
     spotLight.shadow.radius = 3.5;
     scene.add(spotLight);
 
-    const fillLight = new THREE.PointLight("#ffc2bd", 0.9, 6);
+    const fillLight = new THREE.PointLight("#ffff", 0.8, 6);
     fillLight.position.set(-2.1, 0.8, 1.2);
     scene.add(fillLight);
 
@@ -213,15 +213,15 @@ export default function CurtainReveal() {
 
     const { map, bump } = createFabricTextures();
     const curtainMaterial = new THREE.MeshPhysicalMaterial({
-      color: "#c51a19",
+      color: "#b21918",
       roughness: 0.8,
       metalness: 0.05,
       clearcoat: 0.2,
       clearcoatRoughness: 0.6,
       sheen: 0.7,
       sheenColor: new THREE.Color("#d1a1a8"),
-      emissive: new THREE.Color("#4a0a0a"),
-      emissiveIntensity: 0.4,
+      emissive: new THREE.Color("#3a0808"),
+      emissiveIntensity: 0.32,
       sheenRoughness: 0.8,
       map,
       bumpMap: bump,
@@ -283,7 +283,7 @@ export default function CurtainReveal() {
     pedestal.receiveShadow = true;
 
     const logoTexture = new THREE.TextureLoader().load(
-      "/images/logo_hgm_withtext.png"
+      "/images/Heguideme App Icon.png"
     );
     logoTexture.colorSpace = THREE.SRGBColorSpace;
 
@@ -314,7 +314,7 @@ export default function CurtainReveal() {
     ];
 
     const book = new THREE.Mesh(
-      new THREE.BoxGeometry(0.7, 0.9, 0.12),
+      new THREE.BoxGeometry(0.9, 0.9, 0.12),
       bookMaterials
     );
     book.castShadow = true;
@@ -471,7 +471,7 @@ export default function CurtainReveal() {
                   stage === 3 ? "opacity-100" : "opacity-0"
                 }`}
               >
-                The Quiet Time Journal
+                HeGuidesme App
               </span>
             </div>
             {stage < 3 && (
@@ -496,7 +496,7 @@ export default function CurtainReveal() {
             ))}
           </div>
           <p className="text-sm text-[#c9d8e6]">{STAGE_COPY[stage]}</p>
-          {stage === 3 && (
+          {/* {stage === 3 && (
             <button
               type="button"
               onClick={handleReset}
@@ -504,7 +504,7 @@ export default function CurtainReveal() {
             >
               Reset Reveal
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </section>
