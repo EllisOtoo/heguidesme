@@ -499,18 +499,27 @@ export default function CurtainReveal() {
           <p className="text-xs uppercase tracking-[0.4em] text-[#b8c7d8]">
             Product Reveal
           </p>
-          <div className="mt-6 flex flex-col items-center gap-2">
-            <span className="text-[clamp(3rem,10vw,5.5rem)] font-semibold tracking-[0.2em] text-white">
-              {countdownValue}
-            </span>
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <div className="relative flex h-[5.5rem] items-center justify-center">
+              <span
+                className={`absolute text-[clamp(3rem,10vw,5.5rem)] font-semibold tracking-[0.2em] text-white transition-opacity duration-500 ${
+                  stage < 3 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {countdownValue}
+              </span>
+              <span
+                className={`absolute whitespace-nowrap text-[clamp(1.8rem,5.5vw,3.6rem)] font-serif font-semibold leading-none text-white transition-opacity duration-700 ${
+                  stage === 3 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                The Quiet Time Journal
+              </span>
+            </div>
             <span className="text-xs uppercase tracking-[0.4em] text-[#cfd8e2]">
-              {stage < 3 ? "Taps to reveal" : "Revealed"}
+              {stage < 3 ? "Taps to reveal" : "Product revealed"}
             </span>
           </div>
-          {/*   <p className="mt-6 text-base text-[#d8e2ee] md:text-lg">
-            A devotional companion designed for gentle reflection, thoughtful
-            prompts, and a quiet place to meet God daily.
-          </p> */}
         </div>
 
         <div className="flex flex-col items-center gap-4">
