@@ -5,7 +5,7 @@ import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // Preset donation amounts in GHS
-const PRESET_AMOUNTS = [1, 200, 500, 1000];
+const PRESET_AMOUNTS = [100, 200, 500, 1000];
 
 export default function DonatePage() {
   const [amount, setAmount] = useState<number | "">("");
