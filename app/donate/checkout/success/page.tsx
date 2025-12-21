@@ -71,8 +71,8 @@ function DonationSuccessContent() {
             Your generous donation has been received.
           </p>
           <p className="text-text-light mb-8">
-            Your support helps us continue our mission of spiritual growth and
-            community building. A confirmation email has been sent to your inbox.
+            Thank you for donating and supporting this Christian app development.
+You are part early testers and on inputs on our next milestone. 
           </p>
 
           {/* Action Buttons */}
