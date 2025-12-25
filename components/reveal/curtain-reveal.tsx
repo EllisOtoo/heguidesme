@@ -6,15 +6,11 @@ import Link from "next/link";
 import gsap from "gsap";
 import * as THREE from "three";
 
-const DESKTOP_REVEAL_STEPS = [0, 0.14, 0.24, 0.34, 0.48, 1];
-const MOBILE_REVEAL_STEPS = [0, 0.04, 0.1, 0.16, 0.22, 1];
-const COUNTDOWN_START = 5;
+const DESKTOP_REVEAL_STEPS = [0, 1];
+const MOBILE_REVEAL_STEPS = [0, 1];
+const COUNTDOWN_START = 1;
 const STAGE_COPY = [
   "Tap anywhere to pull the curtain.",
-  "A quiet first glimpse of the story.",
-  "The curtain softens, the light grows.",
-  "A brighter hint of what's coming.",
-  "Almost revealed. One more tap.",
   "Fully revealed. Tap reset to replay.",
 ];
 
@@ -442,7 +438,7 @@ export default function CurtainReveal() {
   }, []);
 
   const handleAdvance = () => {
-    setStage((prev) => Math.min(prev + 1, 5));
+    setStage((prev) => Math.min(prev + 1, 1));
   };
 
   const handleReset = (event: MouseEvent<HTMLButtonElement>) => {
@@ -480,20 +476,20 @@ export default function CurtainReveal() {
             <div className="relative flex h-[5rem] items-center justify-center">
               <span
                 className={`absolute text-[clamp(3rem,10vw,5.5rem)] font-semibold tracking-[0.2em] text-white transition-opacity duration-500 ${
-                  stage < 5 ? "opacity-100" : "opacity-0"
+                  stage < 1 ? "opacity-100" : "opacity-0"
                 }`}
               >
                 {countdownValue}
               </span>
               <span
                 className={`absolute whitespace-nowrap text-[clamp(1.8rem,5.5vw,3.6rem)] font-serif font-semibold leading-none text-white transition-opacity duration-700 ${
-                  stage === 5 ? "opacity-100" : "opacity-0"
+                  stage === 1 ? "opacity-100" : "opacity-0"
                 }`}
               >
                 HeGuidesme App
               </span>
             </div>
-            {stage === 5 && (
+            {stage === 1 && (
               <div className="flex flex-col items-center gap-3">
                 <span className="text-xs uppercase tracking-[0.35em] text-[#cfd8e2]">
                   Get early access
@@ -507,9 +503,9 @@ export default function CurtainReveal() {
                 </Link>
               </div>
             )}
-            {stage < 5 && (
+            {stage < 1 && (
               <span className="text-xs uppercase tracking-[0.4em] text-[#cfd8e2]">
-                Taps to reveal
+                Tap to reveal
               </span>
             )}
           </div>
@@ -517,7 +513,7 @@ export default function CurtainReveal() {
 
         <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-3">
-            {[1, 2, 3, 4, 5].map((step) => (
+            {[1].map((step) => (
               <span
                 key={step}
                 className={`h-1 w-8 rounded-full transition-all ${

@@ -4,7 +4,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function getProducts() {
   const products = await prisma.product.findMany({
-    where: { category: { not: "DONATION" } },
+    where: { 
+      category: { not: "DONATION" },
+      isArchived: false
+    },
     orderBy: { createdAt: "desc" },
   });
   return products;
