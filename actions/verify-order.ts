@@ -2,20 +2,24 @@
 
 import { verifyPayment } from "@/lib/paystack";
 import { prisma } from "@/lib/prisma";
+import { completeOrder } from "./order-completion";
 
 export async function verifyOrderPayment(reference: string) {
   try {
     const paymentData = await verifyPayment(reference);
 
     if (paymentData.status && paymentData.data.status === "success") {
-      const updateResult = await prisma.order.updateMany({
+      const order = await prisma.order.findUnique({
         where: { reference },
-        data: { status: "PAID" },
+        select: { id: true }
       });
 
-      if (updateResult.count === 0) {
+      if (!order) {
         console.error("No order found for reference", reference);
+        return { success: false, error: "Order not found" };
       }
+
+      await completeOrder(order.id);
 
       return { success: true };
     }

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
+import { completeOrder } from "@/actions/order-completion";
 
 type PaystackWebhookEvent = {
   event?: string;
@@ -88,11 +89,8 @@ export async function POST(request: Request) {
     }
 
     if (order.status !== "PAID") {
-      await prisma.order.update({
-        where: { id: order.id },
-        data: { status: "PAID" },
-      });
-      console.info("[paystack:webhook] marked paid", { reference, orderId: order.id });
+      await completeOrder(order.id);
+      console.info("[paystack:webhook] marked paid and inventory reduced", { reference, orderId: order.id });
     }
 
     return NextResponse.json({ ok: true });
